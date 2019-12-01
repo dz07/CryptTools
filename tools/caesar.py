@@ -13,7 +13,7 @@ def set_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--text", help="text to read from. If not specified the program will read from standard input")
     parser.add_argument("-k", "--key", help="key used to encrypt. If no key is provided the program will try to crack and decrypt using the specified language", type=int)
-    parser.add_argument("-l", "--lang", help=f"available languages: {enchant.list_languages()} (default: en_US). Only useful if no key is provided", default='en_US')
+    parser.add_argument("-l", "--lang", help="available languages: {enchant.list_languages()} (default: en_US). Only useful if no key is provided", default='en_US')
     parser.add_argument("-V", "--verbose", action='store_true', help="show extra information")
     parser.add_argument("-A", "--all", action='store_true', help="show decrypted text for each tested key")
     parser.add_argument("-D", "--debug", action='store_true', help="show information about text validation")
@@ -24,7 +24,7 @@ def set_args():
 def caesar(text, shift):
     """Encrypts/Decrypts a `text` using the caesar substitution cipher with specified `shift` key"""
     if shift < 0 or shift > MODULE:
-        error(f"key must be between 0 and {MODULE}")
+        error("key must be between 0 and {MODULE}")
     return ''.join(map(lambda char: shift_by(char, shift), text))
 
 def crack(text, terminal=True):
@@ -34,10 +34,10 @@ def crack(text, terminal=True):
         decrypt = caesar(text, shift)
         if args.verbose:
             sys.stdout.write("\r")
-            sys.stdout.write(f"Testing '{FREQUENCY_ALPHABET[i]}' (ROT-{shift})       ")
+            sys.stdout.write("Testing '{FREQUENCY_ALPHABET[i]}' (ROT-{shift})       ")
             sys.stdout.flush()
         if args.all:
-            print(f'Testing decrypted text:\n"{decrypt}"')
+            print('Testing decrypted text:\n"{decrypt}"')
         if args.verbose and args.debug:
             print()
         if validator.is_valid(decrypt):
@@ -47,7 +47,7 @@ def crack(text, terminal=True):
                     validator.success()
                     if args.debug:
                         print()
-                    print(f'Decrypted with ROT-{shift}. Original encryption key: {encryptionKey}')
+                    print('Decrypted with ROT-{shift}. Original encryption key: {encryptionKey}')
                 print(decrypt)
             return (encryptionKey, decrypt)
         if args.debug:
@@ -66,10 +66,10 @@ if __name__ == "__main__":
 
     if args.key is not None:
         if args.verbose:
-            print(f"Original text most frequent character: {most_frequent_char(clean(text))}\n")
+            print("Original text most frequent character: {most_frequent_char(clean(text))}\n")
         encrypted = caesar(text, args.key)
         print(encrypted)
         if args.verbose:
-            print(f"\nEncrypted text most frequent character: {most_frequent_char(clean(encrypted))}")
+            print("\nEncrypted text most frequent character: {most_frequent_char(clean(encrypted))}")
     else:
         crack(text)
